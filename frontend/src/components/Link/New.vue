@@ -68,6 +68,7 @@
 </template>
 
 <script setup>
+  import http from '@/plugins/http';
   import { ref } from 'vue';
   import { maxLength, required, url } from '@vuelidate/validators';
   import { useVuelidate } from '@vuelidate/core';
@@ -103,10 +104,29 @@
     return String(firstError.$message);
   }
 
+  function create (obj) {
+    http.post('links', obj)
+      .then(savedSuccessfully)
+      .catch(() => {
+        alert('error creating link')
+        close()
+      })
+  }
+
   function save () {
     $v.value.$touch();
+
     if ($v.value.$invalid) return;
-    loading_active.value = true
+
+    loading_active.value = true;
+
+    create(new_link.value);
+  }
+
+  function savedSuccessfully() {
+    close();
+    loading_active.value = false;
+    // linksStore.executeCallbackUpdateListLinks()
   }
 
   function close () {
