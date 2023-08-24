@@ -1,7 +1,10 @@
 <template>
-  <HelloWorld />
+  <Stats class="mt-10" />
+  <v-divider class="my-6" />
+  <Options />
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+  import Stats from '@/components/Stats/Index.vue';
+  import Options from '@/components/Options/Index.vue';
 </script>
