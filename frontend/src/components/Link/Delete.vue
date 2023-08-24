@@ -41,23 +41,26 @@
   </v-dialog>
 </template>
 
-<script setup lang="ts">
-import {ref} from "vue";
-import TitleDialog from "@/utils/TitleDialog.vue";
+<script setup>
+  import http from '@/plugins/http';
+  import { ref } from "vue";
+  import TitleDialog from "@/utils/TitleDialog.vue";
 
-const props = defineProps({ id: String })
+  const props = defineProps({ id: String })
 
-const dialog_active = ref(false)
-const loading_active = ref(false)
+  const dialog_active = ref(false)
+  const loading_active = ref(false)
 
-function deleteLink() {
-  loading_active.value = true;
-  console.log('delete');
-  close();
-}
+  function deleteLink() {
+    loading_active.value = true;
 
-function close() {
-  dialog_active.value = false;
-  loading_active.value = false;
-}
+    http.delete(`links/${props.id || ''}`)
+      .catch(() => alert('error deleting link'))
+      .finally(() => close());
+  }
+
+  function close() {
+    dialog_active.value = false;
+    loading_active.value = false;
+  }
 </script>

@@ -15,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::delete('links', [LinkController::class, 'deleteAll']);
 Route::apiResource('links', LinkController::class);
