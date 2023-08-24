@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLinkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -24,8 +25,9 @@ class LinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLinkRequest $request)
     {
+        \Log::info($request->all());
         return response()->json([], Response::HTTP_OK);
     }
 
