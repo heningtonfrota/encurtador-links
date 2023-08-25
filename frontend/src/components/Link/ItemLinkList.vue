@@ -34,7 +34,7 @@
         </template>
       </CopyValue>
 
-      <New :link-edit="link">
+      <New :link_edit="link">
         <template #activator="{ callback }">
           <v-btn
             icon
