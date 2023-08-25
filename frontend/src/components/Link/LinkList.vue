@@ -1,8 +1,8 @@
 <template>
   <div>
-    <template v-if="links_search.length > 0">
+    <template v-if="linksSearch.length > 0">
       <ItemLinkList
-        v-for="link in links_search"
+        v-for="link in linksSearch"
         :key="link.id"
         :link="link"
         class="mb-4"
@@ -19,9 +19,26 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import http from '@/plugins/http';
+  import { ref, onMounted } from 'vue';
   import ItemLinkList from '@/components/Link/ItemLinkList.vue';
+  import { useLinksStore } from '@/store/links';
+  import { useLinksSearch } from '@/layouts/AppBar/search.js';
 
-  const links_search = ref([]);
   const loading_active = ref(false);
+
+  const { linksSearch } = useLinksSearch();
+  const links_store = useLinksStore();
+
+  onMounted(getLinksApi)
+  links_store.setCallback(getLinksApi)
+
+  function getLinksApi() {
+    http.get('links')
+      .then(response => {
+        links_store.setItems(response.data.links);
+        loading_active.value = false;
+      })
+      .catch(() => alert('Error when fetching links'))
+  }
 </script>

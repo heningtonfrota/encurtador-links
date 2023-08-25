@@ -42,19 +42,21 @@
 </template>
 
 <script setup>
-  import http from '@/plugins/http';
   import { ref } from "vue";
+  import { useLinksStore } from "@/store/links";
+  import http from '@/plugins/http';
   import TitleDialog from "@/utils/TitleDialog.vue";
 
-  const props = defineProps({ id: String })
-
-  const dialog_active = ref(false)
-  const loading_active = ref(false)
+  const props = defineProps({ id: String });
+  const linksStore = useLinksStore();
+  const dialog_active = ref(false);
+  const loading_active = ref(false);
 
   function deleteLink() {
     loading_active.value = true;
 
     http.delete(`links/${props.id || ''}`)
+      .then(() => linksStore.executeCallbackUpdateListLinks())
       .catch(() => alert('error deleting link'))
       .finally(() => close());
   }

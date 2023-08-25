@@ -72,10 +72,12 @@
   import { ref } from 'vue';
   import { maxLength, required, url } from '@vuelidate/validators';
   import { useVuelidate } from '@vuelidate/core';
+  import { useLinksStore } from "@/store/links";
   import TitleDialog from '@/utils/TitleDialog.vue'
 
   const dialog_active = ref(false);
   const loading_active = ref(false);
+  const linksStore = useLinksStore();
 
   const new_link = ref({
     link: '',
@@ -100,7 +102,9 @@
 
   function getErrorsMessages(key) {
     if (!$v.value[key].$dirty || $v.value[key].$errors.length === 0) return '';
+
     const [firstError] = $v.value[key].$errors;
+
     return String(firstError.$message);
   }
 
@@ -125,13 +129,17 @@
 
   function savedSuccessfully() {
     close();
+
     loading_active.value = false;
-    // linksStore.executeCallbackUpdateListLinks()
+
+    linksStore.executeCallbackUpdateListLinks();
   }
 
   function close () {
     dialog_active.value = !dialog_active.value;
+
     $v.value.$reset();
+
     new_link.value = {
       link: '',
       name: '',
