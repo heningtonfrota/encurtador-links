@@ -6,9 +6,9 @@
       <p class="font-weight-medium text-subtitle-1">{{ props.link.name }}</p>
       <a
         class="font-weight-medium text-caption text-blue mt-n1 text-decoration-none"
-        :href="props.link.alias"
+        :href="props.link.slug"
         target="_blank"
-        v-text="props.link.alias"
+        v-text="props.link.slug"
         @click="clickLink"
       />
     </div>
@@ -20,7 +20,7 @@
         <v-icon :size="13" class="ml-n2px">mdi-poll</v-icon>
       </div>
 
-      <CopyValue :value="props.link.alias">
+      <CopyValue :value="props.link.slug">
         <template #default="{ copy }">
           <v-btn
             icon
@@ -34,7 +34,7 @@
         </template>
       </CopyValue>
 
-      <New :link-edit="link">
+      <New :link_edit="link">
         <template #activator="{ callback }">
           <v-btn
             icon
@@ -57,11 +57,13 @@
   import New from "@/components/Link/New.vue";
   import Delete from "@/components/Link/Delete.vue";
   import CopyValue from "@/utils/CopyValue.vue";
+  import { useLinksStore } from "@/store/links";
 
-  const props = defineProps(['link'])
+  const props = defineProps(['link']);
+  const links_store = useLinksStore();
 
   function clickLink() {
-    console.log('clic');
+    setTimeout(links_store.executeCallbackUpdateListLinks, 500)
   }
 </script>
 

@@ -69,19 +69,30 @@
 
 <script setup>
   import http from '@/plugins/http';
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import { maxLength, required, url } from '@vuelidate/validators';
   import { useVuelidate } from '@vuelidate/core';
+  import { useLinksStore } from "@/store/links";
   import TitleDialog from '@/utils/TitleDialog.vue'
 
   const dialog_active = ref(false);
   const loading_active = ref(false);
+  const linksStore = useLinksStore();
+  const props = defineProps(['link_edit']);
 
   const new_link = ref({
     link: '',
     name: '',
     slug: ''
   });
+
+  watch(dialog_active, () => {
+    if (props.link_edit === undefined) return;
+
+    const { link, name, slug } = props.link_edit;
+
+    new_link.value = { link, name, slug }
+  })
 
   const rules = {
     link: {
@@ -100,17 +111,24 @@
 
   function getErrorsMessages(key) {
     if (!$v.value[key].$dirty || $v.value[key].$errors.length === 0) return '';
+
     const [firstError] = $v.value[key].$errors;
+
     return String(firstError.$message);
   }
 
   function create (obj) {
     http.post('links', obj)
       .then(savedSuccessfully)
-      .catch(() => {
-        alert('error creating link')
-        close()
-      })
+      .catch(() => alert('Error creating link'))
+      .finally(() => close())
+  }
+
+  function update(link) {
+    http.put(`links/${link.id}`, link)
+      .then(savedSuccessfully)
+      .catch(() => alert('Error updating link'))
+      .finally(() => close())
   }
 
   function save () {
@@ -120,18 +138,32 @@
 
     loading_active.value = true;
 
-    create(new_link.value);
+    if (!props.link_edit?.id) {
+      create(new_link.value);
+      return;
+    }
+
+    const params = {
+      ...new_link.value,
+      id: props.link_edit.id
+    }
+
+    update(params);
   }
 
   function savedSuccessfully() {
     close();
+
     loading_active.value = false;
-    // linksStore.executeCallbackUpdateListLinks()
+
+    linksStore.executeCallbackUpdateListLinks();
   }
 
   function close () {
-    dialog_active.value = !dialog_active.value;
+    dialog_active.value = false;
+
     $v.value.$reset();
+
     new_link.value = {
       link: '',
       name: '',

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreLinkRequest;
+use App\Http\Requests\StoreUpdateLinkRequest;
+use App\Models\Link;
+use App\Services\SlugGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class LinkController extends Controller
 {
@@ -15,8 +19,7 @@ class LinkController extends Controller
      */
     public function index()
     {
-        $links = [];
-        return response()->json($links, Response::HTTP_OK);
+        return response()->json(['links' => Link::get()], Response::HTTP_OK);
     }
 
     /**
@@ -25,9 +28,9 @@ class LinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreLinkRequest $request)
+    public function store(StoreUpdateLinkRequest $request)
     {
-        \Log::info($request->all());
+        Link::create($this->validarRequest($request));
         return response()->json([], Response::HTTP_OK);
     }
 
@@ -39,7 +42,7 @@ class LinkController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(['link' => Link::find($id)]);
     }
 
     /**
@@ -49,9 +52,10 @@ class LinkController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUpdateLinkRequest $request, $id)
     {
-        //
+        Link::find($id)->update($this->validarRequest($request));
+        return response()->json([], Response::HTTP_OK);
     }
 
     /**
@@ -62,6 +66,32 @@ class LinkController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Link::find($id)->delete();
+        return response()->json([], Response::HTTP_OK);
+    }
+
+    /**
+     * Remve all links from list
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteAll()
+    {
+        DB::transaction(function () {
+            Link::getQuery()->delete();
+        });
+
+        return response()->json([], Response::HTTP_OK);
+    }
+
+    /**
+     * Validation Slug
+     * @return Array
+     */
+    private function validarRequest($request)
+    {
+        $uniqueSlug = SlugGenerator::generateUniqueSlug();
+        $request['slug'] = isset($request->slug) ? Str::of($request->slug)->slug('-') : $uniqueSlug;
+        return $request->all();
     }
 }
