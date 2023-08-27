@@ -19,7 +19,17 @@ class LinkController extends Controller
      */
     public function index()
     {
-        return response()->json(['links' => Link::get()], Response::HTTP_OK);
+        $links = Link::selectRaw("
+            links.*,
+            count(click_links.link_id) as clicks,
+            concat('" . config('app.url') . "/click-link/', links.slug) as alias"
+        )
+        ->join('click_links', 'click_links.link_id', 'links.id')
+        ->groupBy('links.id');
+
+        return response()->json([
+            'links' => $links->orderBy('created_at')->get()
+        ], Response::HTTP_OK);
     }
 
     /**

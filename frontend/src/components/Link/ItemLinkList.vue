@@ -6,7 +6,7 @@
       <p class="font-weight-medium text-subtitle-1">{{ props.link.name }}</p>
       <a
         class="font-weight-medium text-caption text-blue mt-n1 text-decoration-none"
-        :href="props.link.slug"
+        :href="props.link.alias"
         target="_blank"
         v-text="props.link.slug"
         @click="clickLink"
