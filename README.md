@@ -6,9 +6,27 @@ Após clonar o projeto do github dentro dele terá duas pastas
 - backend
 
 primeiramente, configure o back-end. Essa configuração deve ser feita 
-dentro da pasta "backend" e está dividida em duas partes
+dentro da pasta "backend" 
 
-1. Configuração de variavéis de ambiente de acesso ao
+1. Configurar o .env
+
+```bash
+  cp .env.example .env
+```
+
+2. Instale as dependencias com o composer
+
+```bash
+  composer install
+```
+
+3. Gere a key de acesso do Laravel
+
+```bash
+  php artisan key:generate
+```
+
+4. Configuração de variavéis de ambiente de acesso ao
 banco de dados MYSQL. Faça isso no arquivo .env
 
 ```bash
@@ -18,18 +36,20 @@ DB_DATABASE=nome_banco
 DB_USERNAME=usuario_banco
 DB_PASSWORD=senha_banco
 ```
-2. Execução do projeto. Execute os comandos abaixo dentro de um terminal
+
+5. Criação das tabelas no banco de dados
 
 ```bash
-composer install
-
-php artisan migrate
-
-php artisan serve
+  php artisan migrate
 ```
 
+6. Execução do projeto com o servidor do proprio laravel
 
-agora, configure o front-end. Para isso, você deve estar dentro
+```bash
+  php artisan serve
+```
+
+Agora, configure o front-end. Para isso, você deve estar dentro
 da pasta "frontend" e fazer duas configurações:
 
 1. Verifique se a variavél de ambiente **VITE_BASE_URL_API**
