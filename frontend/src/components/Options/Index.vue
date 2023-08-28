@@ -27,12 +27,7 @@
     <v-spacer />
 
     <div>
-      <v-btn
-        icon="mdi-swap-horizontal"
-        variant="text"
-        color="grey-darken-1"
-        class="mr-3 rotate-90deg"
-      />
+      <Ordered />
     </div>
 
     <v-btn
@@ -51,4 +46,5 @@
 <script setup>
 import IconBarChart from '@/utils/icons/BarChart.vue';
 import Delete from "@/components/Link/Delete.vue";
+import Ordered from './Ordered.vue';
 </script>

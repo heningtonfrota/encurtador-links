@@ -14,6 +14,29 @@ export const useLinksStore = defineStore('links', () => {
     items.value = links
   }
 
+  function setOrder(param) {
+    switch (param) {
+      case "1":
+        items.value.sort((a,b) => a.link.localeCompare(b.link));
+        break;
+      case "2":
+        items.value.sort((a,b) => a.slug.localeCompare(b.slug));
+        break;
+      case "3":
+        items.value.sort((a,b) => a.name.localeCompare(b.name));
+        break;
+      case "4":
+        items.value.sort((a,b) => a.id - b.id);
+        break;
+      case "5":
+        items.value.sort((a,b) => a.clicks - b.clicks);
+        break;
+
+      default:
+        break;
+    }
+  }
+
   function setCallback(fn) {
     callbackUpdateListLinks = fn
   }
@@ -25,6 +48,7 @@ export const useLinksStore = defineStore('links', () => {
 
   return {
     items,
+    setOrder,
     setItems,
     setCallback,
     executeCallbackUpdateListLinks,
