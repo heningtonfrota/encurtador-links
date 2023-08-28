@@ -24,7 +24,7 @@ class LinkController extends Controller
             count(click_links.link_id) as clicks,
             concat('" . config('app.url') . "/click-link/', links.slug) as alias"
         )
-        ->join('click_links', 'click_links.link_id', 'links.id')
+        ->leftJoin('click_links', 'click_links.link_id', 'links.id')
         ->groupBy('links.id');
 
         return response()->json([

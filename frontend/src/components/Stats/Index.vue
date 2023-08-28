@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex align-center">
       <span class="text-body-2 font-weight-medium text-grey-darken-2">STATS</span>
-
+      {{ linksSearch.value }}
       <v-spacer />
 
       <span class="text-body-2 font-weight-medium text-grey-lighten-1">See all</span>
@@ -21,11 +21,17 @@
 <script setup>
   import {computed} from "vue";
   import Stat from './Stat.vue';
+  import { useLinksSearch } from "@/layouts/AppBar/search.js";
+  import { useLinksStore } from '@/store/links';
+
+  const links_store = useLinksStore();
+  const { linksSearch } = useLinksSearch();
+
 
   const stats = computed(() => ([
   {
     icon: 'mdi-link-variant',
-    value: 0,
+    value: linksSearch.value.length,
     text: 'Links'
   },
   {
@@ -35,7 +41,7 @@
   },
   {
     icon: 'mdi-cursor-default-click-outline',
-    value: 0,
+    value: links_store.total_clicks,
     text: 'Clicks'
   },
   {
